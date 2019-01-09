@@ -10,7 +10,8 @@ require('./secrets.js');
 const LEX = 'LEX',
   WATSON = 'WATSON';
 let bot = WATSON,
-  service;
+  service,
+  sessionId;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,22 +19,48 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/api/initiate', (req, res, next) => {
   if (bot === WATSON) {
     service = new watson.AssistantV2({
-        url: process.env.URL,
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
-        version: process.env.VERSION
+      url: process.env.URL,
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+      version: process.env.VERSION,
     });
 
-    service.createSession({
-        assistant_id: process.env.ASSISTANT_ID
-    }, (err, response) => {
+    service.createSession(
+      {
+        'assistant_id': process.env.ASSISTANT_ID,
+      },
+      (err, response) => {
         if (err) next(err);
+        sessionId = response.session_id;
         res.json(response);
-    })
+      }
+    );
   }
 });
 
-app.post('/api/sendMessage', (req, res, next) => {});
+app.post('/api/sendMessage', (req, res, next) => {
+  const { text } = req.body;
+  if (bot === WATSON) {
+    if (service) {
+      service.message(
+        {
+          'assistant_id': process.env.ASSISTANT_ID,
+          'session_id': sessionId,
+          input: {
+            'message_type': 'text',
+            text,
+          },
+        },
+        (err, response) => {
+          if (err) next(err);
+          else res.json(response);
+        }
+      );
+    } else {
+        throw new Error('service not initialized.');
+    }
+  }
+});
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 

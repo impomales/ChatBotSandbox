@@ -1,0 +1,23 @@
+{
+  "name": "chatboxsandbox",
+  "version": "1.0.0",
+  "description": "## experiment with integrating Watson Assistant and Amazon Lex into a node.js web app",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/impomales/ChatBotSandbox.git"
+  },
+  "author": "Isaias Pomales",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/impomales/ChatBotSandbox/issues"
+  },
+  "homepage": "https://github.com/impomales/ChatBotSandbox#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

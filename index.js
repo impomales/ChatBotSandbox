@@ -75,6 +75,7 @@ app.post('/api/sendMessage', (req, res, next) => {
           botName: process.env.BOT_NAME,
           userId: sessionId,
           inputText: text,
+          sessionAttributes: {}
         },
         (err, response) => {
           if (err) next(err);
